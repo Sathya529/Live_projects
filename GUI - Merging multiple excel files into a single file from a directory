@@ -1,0 +1,38 @@
+#importing libraries 
+import pandas as pd 
+import os 
+from tkinter import *
+from tkinter import filedialog
+from tkinter.filedialog import askdirectory
+
+#creating window
+window = Tk()
+window.title("Merging Excel files into a single file")
+window.geometry("850x550")
+window.configure(bg="white")
+window.config(padx=10, pady=10)
+
+#layout creation 
+my_label = Label(text="Merging multiple excel files into a single file from a directory", font=("Arial", 20, "bold"))
+my_label.config(padx=10, pady=10)
+my_label.grid(column=1, row=0)
+
+#funtion definition for merging excel files from a directory
+def open_file():
+    filepath = filedialog.askdirectory()
+    
+    df = []
+    for file in os.listdir(filepath):
+        if file.endswith('.xlsx'):
+             print('Loading file {0}...'.format(file))
+             df.append(pd.read_excel(os.path.join(filepath, file), sheet_name= 'Data'))
+    df_master = pd.concat(df)
+    df_master.to_excel('master.xlsx', index = False)
+
+
+#button creation and calling the funtion when button clicks
+button = Button(text= "Choose Folder",font =("Arial", 20, "bold"), command= open_file, width = 20)
+button.place(x=225, y=475)
+
+#run the app
+window.mainloop()
